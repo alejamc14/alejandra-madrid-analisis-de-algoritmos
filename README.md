@@ -37,3 +37,9 @@ git log --oneline
 ```
 
 Los avances significativos del repositorio se registrarán mediante commits descriptivos y se sincronizarán con GitHub utilizando `git push`.
+
+## Autor
+
+- **Nombre:** Alejandra Madrid Calderón
+- **Correo:** Alejandramadrid324652@correo.itm.edu.co
+- **Semestre:** 8
