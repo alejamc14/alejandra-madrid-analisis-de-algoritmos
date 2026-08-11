@@ -43,3 +43,7 @@ Los avances significativos del repositorio se registrarán mediante commits desc
 - **Nombre:** Alejandra Madrid Calderón
 - **Correo:** Alejandramadrid324652@correo.itm.edu.co
 - **Semestre:** 8
+
+## Colaborador del repositorio
+
+A la espera de confirmar que la cuenta `santiagoSuarez219` haya sido agregada como colaborador del repositorio.
