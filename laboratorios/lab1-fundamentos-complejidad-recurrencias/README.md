@@ -17,3 +17,14 @@ Al duplicar la capacidad del servidor podría disminuirse el tiempo,  pero esto 
 
 En el aspecto ambiental, un proceso que se demora más consume mucho más recursos, lo que genera también un mayor consumo de energía y se vuelve una cifra significativa con el tiempo ya que son procesos que se repiten diariamente. Desde lo ético, la responsabilidad es aún mayor por tratarse de personas con condiciones de salud que exigen una atención prioritaria, por lo tanto si el sistema de ordenamiento falla o no se completa en el tiempo requerido el principal afectado por esta situación es el paciente, debido al posible retraso en su proceso de atención. Además la secretaría y el equipo encargado del sistema también tendrían que asumir consecuencias operativas y técnicas por no disponer de la lista completa.
 
+## Parte 3 — Peor caso, mejor caso y caso promedio, demostrados en Python
+
+### 3.1 — Explicación
+El peor caso ocurre cuando la lista viene en el orden contrario al que se necesita y por lo tanto debe hacer una mayor cantidad de comparaciones, el mejor caso es cuando la lista ya viene casi ordenada  y solo se aplica un mínimo de comparaciones, mientras que el caso promedio se da cuando viene en un orden al azar.
+
+Para decidir si el algoritmo se puede pasar a producción se debe utilizar el peor caso, ya que este me permite conocer si el sistema podría cumplir con el máximo de tiempo definido de 4 horas en el caso menos favorable, debido a que esta implementación ejecuta el caso donde tiene que hacer la mayor cantidad de comparaciones, lo cual garantiza el límite máximo de  tiempo que tardaria el proceso con cualquier entrada distinta.
+ 
+**Escenario A:** representa el caso promedio porque el orden viene aleatorio.
+**Escenario B:** es el mejor caso,  ya que al tener el 98 % en orden casi no hará desplazamientos.
+
+**Escenario C:** es el peor caso, ya que viene de menor a mayor y debe mover cada elemento hasta el principio.
