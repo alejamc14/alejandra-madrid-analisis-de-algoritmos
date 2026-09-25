@@ -25,6 +25,7 @@ El peor caso ocurre cuando la lista viene en el orden contrario al que se necesi
 Para decidir si el algoritmo se puede pasar a producción se debe utilizar el peor caso, ya que este me permite conocer si el sistema podría cumplir con el máximo de tiempo definido de 4 horas en el caso menos favorable, debido a que esta implementación ejecuta el caso donde tiene que hacer la mayor cantidad de comparaciones, lo cual garantiza el límite máximo de  tiempo que tardaria el proceso con cualquier entrada distinta.
  
 **Escenario A:** representa el caso promedio porque el orden viene aleatorio.
+
 **Escenario B:** es el mejor caso,  ya que al tener el 98 % en orden casi no hará desplazamientos.
 
 **Escenario C:** es el peor caso, ya que viene de menor a mayor y debe mover cada elemento hasta el principio.
@@ -32,10 +33,189 @@ Para decidir si el algoritmo se puede pasar a producción se debe utilizar el pe
 ### 3.2 — Demostración experimental
 
 **Gráfica de comparaciones**
+
 ![parte3_comparaciones.png](./graficas/parte3_comparaciones.png)
 
 **Gráfica de tiempo**
+
 ![parte3_tiempo.png](./graficas/parte3_tiempo.png)
 
 Los resultados de las gráficas confirman la predicción realizada anteriormente, según el tiempo de ejecucion y el número de comparaciones, donde B es el mejor caso, C el peor caso y A es el caso intermedio.
+
+## Parte 4 — Complejidad de merge sort e insertion sort: cálculo y validación
+
+### 4.1 — Cálculo teórico
+
+### Merge Sort
+
+Merge Sort divide la lista en dos partes, ordena cada una recursivamente y luego combina las dos partes ordenadas.
+
+La recurrencia es:
+
+$$
+T(n)=2T\left(\frac{n}{2}\right)+\Theta(n)
+$$
+
+Donde:
+
+* $2$: se generan **2 subproblemas**.
+* $n/2$: cada subproblema tiene la mitad de los elementos.
+* $\Theta(n)$: combinar las dos mitades requiere recorrer sus elementos.
+
+Por tanto:
+
+$$
+a=2,\qquad b=2,\qquad f(n)=\Theta(n)
+$$
+
+#### Método maestro
+
+La forma general es:
+
+$$
+T(n)=aT\left(\frac{n}{b}\right)+f(n)
+$$
+
+Calculamos:
+
+$$
+n^{\log_b a}=n^{\log_2 2}
+$$
+
+$$
+n^{\log_2 2}=n^1=n
+$$
+
+Comparamos con $f(n)$:
+
+$$
+f(n)=\Theta(n)
+$$
+
+Por lo tanto:
+
+$$
+f(n)=\Theta\left(n^{\log_b a}\right)
+$$
+
+Se cumple el **caso 2 del método maestro**, con $k=0$:
+
+$$
+f(n)=\Theta\left(n^{\log_b a}\log^0n\right)
+$$
+
+El resultado del caso 2 es:
+
+$$
+T(n)=\Theta\left(n^{\log_ba}\log^{0+1}n\right)
+$$
+
+Sustituyendo:
+
+$$
+T(n)=\Theta\left(n^1\log n\right)
+$$
+
+$$
+T(n)=\Theta(n\log n)
+$$
+
+**Cota final:**
+
+$$
+\boxed{\Theta(n\log n)}
+$$
+
+---
+
+### Insertion Sort
+
+Para realizar el conteo se considera la siguiente implementación. Los comentarios indican cuántas veces puede ejecutarse cada línea en el **peor caso**:
+
+```python
+def insertion_sort(datos: list[int]) -> list[int]:
+    resultado = datos.copy()       # 1 vez (costo lineal por la copia)
+
+    for i in range(1, len(resultado)):  # n - 1 iteraciones
+        clave = resultado[i]            # n - 1 veces
+        j = i - 1                       # n - 1 veces
+
+        while j >= 0 and resultado[j] > clave:  # Σ(i) + (n - 1)
+            resultado[j + 1] = resultado[j]     # Σ(i)
+            j -= 1                              # Σ(i)
+
+        resultado[j + 1] = clave       # n - 1 veces
+
+    return resultado                   # 1 vez
+```
+
+En el peor caso, la lista está ordenada de forma inversa. Para cada posición $i$, el `while` puede desplazarse $i$ veces.
+
+Por tanto, el número total de ejecuciones del cuerpo del `while` es:
+
+$$
+1+2+3+\cdots+(n-1)
+$$
+
+Aplicando la fórmula de la suma:
+
+$$
+\sum_{i=1}^{n-1}i
+=
+\frac{n(n-1)}{2}
+$$
+
+Por lo tanto:
+
+* La línea de desplazamiento se ejecuta $\frac{n(n-1)}{2}$ veces.
+* La línea `j -= 1` se ejecuta $\frac{n(n-1)}{2}$ veces.
+* La condición del `while` se comprueba una vez adicional por cada iteración del `for`:
+
+$$
+\frac{n(n-1)}{2}+(n-1)
+$$
+
+Los demás costos son lineales:
+
+$$
+T(n)=
+c_1n+
+c_2(n-1)+
+c_3(n-1)+
+c_4(n-1)+
+c_5\left(\frac{n(n-1)}{2}+n-1\right)
+$$
+
+$$
++c_6\frac{n(n-1)}{2}
++c_7\frac{n(n-1)}{2}
++c_8(n-1)+c_9
+$$
+
+Los términos dominantes son cuadráticos:
+
+$$
+\frac{n(n-1)}{2}=\frac{n^2-n}{2}
+$$
+
+Por lo tanto:
+
+$$
+T(n)=\Theta(n^2)
+$$
+
+**Cota final del peor caso:**
+
+$$
+\boxed{\Theta(n^2)}
+$$
+
+---
+
+### Tabla de complejidades
+
+| Algoritmo          | Mejor caso        | Caso promedio     | Peor caso         |
+| ------------------ | ----------------- | ----------------- | ----------------- |
+| **Merge Sort**     | $\Theta(n\log n)$ | $\Theta(n\log n)$ | $\Theta(n\log n)$ |
+| **Insertion Sort** | $\Theta(n)$       | $\Theta(n^2)$     | $\Theta(n^2)$     |
 
