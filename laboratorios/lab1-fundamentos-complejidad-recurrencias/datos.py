@@ -1,7 +1,7 @@
 """Generadores de lotes de registros para los escenarios de Tamiza."""
  
  
-from random import random
+import random
 
 
 def generar_aleatorio(n: int, semilla: int = 42) -> list[int]:
@@ -61,4 +61,4 @@ def generar_inverso(n: int) -> list[int]:
         Lista de n indices de riesgo enteros distintos, en el orden
         inverso al que el algoritmo debe producir.
     """
-    return list(range(n))
+    return list(range(n))   

@@ -28,3 +28,14 @@ Para decidir si el algoritmo se puede pasar a producción se debe utilizar el pe
 **Escenario B:** es el mejor caso,  ya que al tener el 98 % en orden casi no hará desplazamientos.
 
 **Escenario C:** es el peor caso, ya que viene de menor a mayor y debe mover cada elemento hasta el principio.
+
+### 3.2 — Demostración experimental
+
+**Gráfica de comparaciones**
+![parte3_comparaciones.png](./graficas/parte3_comparaciones.png)
+
+**Gráfica de tiempo**
+![parte3_tiempo.png](./graficas/parte3_tiempo.png)
+
+Los resultados de las gráficas confirman la predicción realizada anteriormente, según el tiempo de ejecucion y el número de comparaciones, donde B es el mejor caso, C el peor caso y A es el caso intermedio.
+
