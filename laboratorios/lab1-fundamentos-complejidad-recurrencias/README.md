@@ -2,6 +2,31 @@
 # Laboratorio evaluativo 01 — Fundamentos, complejidad y recurrencias
 ### **Nombre:** Alejandra Madrid Calderón
 
+## Instrucciones para reproducir el experimento
+
+### Requisitos
+
+Para ejecutar los experimentos se requiere Python 3 y la biblioteca `matplotlib`.
+
+El proyecto utiliza un entorno virtual para instalar y ejecutar las dependencias del laboratorio.
+
+### Activar el entorno virtual
+
+Desde la carpeta raíz del repositorio:
+
+```bash
+venv\Scripts\activate 
+
+#Instalar las dependencias
+pip install -r requirements.txt
+
+#Ejecutar la Parte 3
+python laboratorios/lab1-fundamentos-complejidad-recurrencias/parte3_casos.py
+
+#Ejecutar la Parte 4
+python laboratorios/lab1-fundamentos-complejidad-recurrencias/parte4_complejidad.py
+```
+
 
 ## Parte 1 — Analizar el algoritmo antes de comprar hardware
 **Pregunta:** La Secretaría está por firmar la compra de un servidor del doble de velocidad para que el proceso de Tamiza quepa en la ventana de cuatro horas. ¿Por qué debe analizarse primero el algoritmo, si el que está en producción lleva ocho años entregando el resultado correcto?
@@ -219,3 +244,42 @@ $$
 | **Merge Sort**     | $\Theta(n\log n)$ | $\Theta(n\log n)$ | $\Theta(n\log n)$ |
 | **Insertion Sort** | $\Theta(n)$       | $\Theta(n^2)$     | $\Theta(n^2)$     |
 
+### 4.2 — Validación experimental
+![parte4_tiempo.png](./graficas/parte4_tiempo.png)
+
+### Análisis de los resultados
+
+Las mediciones muestran que Merge Sort es mucho más rápido y eficiente que Insertion Sort a medida que crece la cantidad de datos. Mientras Insertion Sort se vuelve muy lento al aumentar el número de registros, por ejemplo, pasando de menos de un segundo con 100 elementos a casi un segundo completo con 6.400, Merge Sort mantiene un tiempo casi plano, tardando solo $0.014$ segundos para los mismos 6.400 registros.
+
+Estos datos confirman exactamente lo que se calculo en la teoría: un algoritmo cuadrático $\Theta(n^2)$ se dispara con volúmenes grandes, mientras que uno logarítmico $\Theta(n \log n)$ se mantiene estable. Aunque en listas muy pequeñas la diferencia es mínima porque Merge Sort gasta un poco de tiempo organizando sus llamadas internas, desde las pruebas iniciales Merge Sort demostró ser la mejor opción.
+
+### 4.3 — Concepto técnico a la Secretaría de Salud
+
+Para Tamiza se recomienda utilizar **Merge Sort** como algoritmo único de ordenamiento. Esta decisión se basa en la necesidad de mantener un comportamiento predecible cuando la cantidad de entradas puede cambiar sin aviso y no se desea mantener implementaciones diferentes para cada tipo de entrada. Aunque Insertion Sort mostró un comportamiento favorable en el escenario B de la Parte 3, su desempeño depende fuertemente de la organización inicial de los datos. En cambio, Merge Sort mantiene una complejidad de $\Theta(n\log n)$ en los casos analizados y en la medición realizada sobre el escenario A, presentó tiempos menores que Insertion Sort para todos los tamaños probados.
+
+La medición más grande realizada fue con 6400 registros. En este caso, Insertion Sort tardó **0.878182 segundos**, mientras que Merge Sort tardó **0.014148 segundos**. La diferencia se hace mayor a medida que aumenta el tamaño de entrada, como se observa en la gráfica de la Parte 4.2 [Comparación de tiempo: Insertion sort vs Merge Sort](./graficas/parte4_tiempo.png).
+
+Para estimar el comportamiento con los 1.200.000 registros de Tamiza se utiliza una extrapolación a partir de la medición de 6400 elementos. Para Insertion Sort se considera el crecimiento cuadrático obtenido en el análisis teórico. Por tanto, se escala el tiempo mediante la relación:
+
+$$
+T(1.200.000) \approx 0.878182
+\left(\frac{1.200.000}{6400}\right)^2
+$$
+
+El resultado es aproximadamente **30.874 segundos**, equivalentes a **8,58 horas**. Esta cifra es una **estimación**, no una medición directa, y supone que el comportamiento observado se mantiene al aumentar la entrada.
+
+Para Merge Sort se utiliza su crecimiento $\Theta(n\log n)$:
+
+$$
+T(1.200.000) \approx 0.014148
+\frac{1.200.000\log_2(1.200.000)}
+{6400\log_2(6400)}
+$$
+
+La estimación obtenida es de aproximadamente **4,24 segundos**. También se trata de una extrapolación y no de una ejecución real con 1.200.000 registros. Bajo este modelo, Merge Sort tendría un margen temporal ampliamente superior dentro de la ventana de cuatro horas.
+
+Por lo tanto, la propuesta de comprar un servidor con el doble de velocidad tampoco resuelve por sí sola el problema del algoritmo actual. En la medición con 6400 elementos, Insertion Sort tardó 0.878182 segundos. Suponiendo idealmente que duplicar la velocidad del servidor redujera el tiempo a la mitad, el valor sería aproximadamente 0.439091 segundos. Aplicando la misma extrapolación cuadrática, el tiempo estimado para 1.200.000 registros sería de aproximadamente **4,29 horas**, todavía superior a la ventana disponible. Por tanto, el cambio de infraestructura no elimina el crecimiento cuadrático  que se observa.
+
+Además del tiempo, debe considerarse la memoria. Merge Sort necesita memoria adicional para realizar las divisiones y almacenar temporalmente los elementos durante la mezcla. Este costo debe contemplarse en la infraestructura de producción, especialmente con 1.200.000 registros. A cambio, se obtiene un comportamiento menos dependiente del orden inicial de los datos y se evita mantener tres implementaciones diferentes según el canal de entrada.
+
+Teniendo en cuenta todo lo anterior, la recomendación técnica es utilizar Merge Sort como implementación única de Tamiza y validar posteriormente su comportamiento con una carga representativa de producción antes del despliegue definitivo.
