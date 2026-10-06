@@ -44,7 +44,7 @@
 
 **Lo que puede mejorar:**
 - Varias funciones de `parte3_casos.py` y `parte4_complejidad.py` no tienen todas las anotaciones de tipos, y `medir_escenario` no declara lo que devuelve.
-- Hay espacios sobrantes en líneas en blanco, falta una línea en blanco en `algoritmos.py`, y faltan saltos de línea al final de algunos archivos.
+- Falta una línea en blanco en `algoritmos.py`.
 
 ## 4. Calidad del análisis de las gráficas (16 / 20)
 **Lo que hizo bien:**
@@ -72,5 +72,5 @@ Sí. Los programas corren sin errores, ordenan bien los tres escenarios y genera
 - Enlace en el informe cada archivo `.py` con su parte.
 - Respalde las respuestas con números concretos (cantidad de datos, tiempos, energía) y con todos los puntos que pide cada pregunta.
 - Use en el cálculo teórico el mismo código que entrega.
-- Agregue anotaciones de tipos a todas las funciones y limpie los espacios sobrantes.
+- Agregue anotaciones de tipos a todas las funciones.
 - Explique cómo ejecutar los programas en cualquier sistema operativo.
