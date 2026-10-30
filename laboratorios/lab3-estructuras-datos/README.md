@@ -95,3 +95,59 @@ Se mantuvo constante la cantidad de 20.000 guías y se modificó el número de c
 
 Se observa que el tiempo promedio de búsqueda aumenta a medida que crece el factor de carga, debido a que se incrementa la cantidad promedio de elementos almacenados en cada casilla.
 
+## Parte 3. Análisis de resultados
+
+### 1. Costo teórico
+#### ¿Por qué la búsqueda en una lista enlazada es Θ(n) y en una tabla hash es Θ(1 + α) en promedio?
+
+En una lista enlazada, cuando una guía no existe, es necesario recorrer todos los nodos para comprobar que no está almacenada. Por eso, el tiempo de búsqueda aumenta proporcionalmente al número de elementos y su complejidad es Θ(n).
+
+En una tabla hash, la función hash permite acceder directamente a una casilla. Si las guías se distribuyen uniformemente, solo es necesario revisar los elementos de esa casilla. Por eso, su costo promedio es Θ(1 + α), donde α = n/m es el factor de carga.
+
+Esta complejidad depende de una buena distribución de las claves. Si todas las guías terminan en una misma casilla, la búsqueda puede degradarse hasta Θ(n), porque sería necesario recorrer una lista enlazada con todos los elementos.
+
+### 2. Lo medido contra lo esperado.
+#### ¿Los resultados medidos coinciden con lo esperado teóricamente?
+
+En el experimento A, al pasar de 1.000 a 5.000 guías, el tamaño de la entrada se multiplicó por 5 y el tiempo de búsqueda de la lista pasó de 0.00004287 a 0.00021815 segundos, aproximadamente 5.09 veces más. Esto evidencia un crecimiento cercano al comportamiento lineal Θ(n).
+
+En cambio, la tabla hash mantuvo tiempos mucho menores. Aunque presentó pequeñas variaciones, el factor de carga permaneció cercano a 2, por lo que el tiempo promedio se mantuvo prácticamente constante en comparación con el crecimiento de la lista.
+
+En el experimento B, al aumentar el factor de carga de aproximadamente 0.5 a 10, el tiempo pasó de 0.00000056 a 0.00000168 segundos. Esto representa un aumento de tres veces, coherente con la idea de que una mayor cantidad de elementos por casilla incrementa el trabajo de búsqueda.
+
+Las pequeñas variaciones de los tiempos también pueden depender del entorno de ejecución y del costo de las operaciones medidas.
+
+### 3. Explique las colisiones.
+#### ¿Por qué existen colisiones incluso cuando m es mayor que n? ¿Qué ventajas y costos tiene el encadenamiento frente al direccionamiento abierto?
+
+Las colisiones ocurren porque la función hash transforma una cantidad muy grande de posibles claves en un número limitado de casillas. Por esta razón, dos guías diferentes pueden obtener el mismo índice, incluso cuando hay más casillas que elementos.
+
+Por ejemplo, con m = 7, las guías 10, 24 y 17 producen el mismo resultado:
+
+- 10 % 7 = 3
+- 24 % 7 = 3
+- 17 % 7 = 3
+
+El encadenamiento permite almacenar los elementos que colisionan en una lista enlazada dentro de la misma casilla. Su ventaja es que facilita la inserción y el manejo de colisiones sin buscar otra posición libre. Su costo es que requiere memoria adicional para los nodos y puede aumentar el tiempo de búsqueda cuando las listas crecen.
+
+El direccionamiento abierto almacena todos los elementos directamente en la tabla y busca otras posiciones disponibles cuando ocurre una colisión. Puede aprovechar mejor la memoria al evitar listas enlazadas, pero necesita estrategias para encontrar posiciones libres y manejar las eliminaciones.
+
+### 4. Tabla hash o árbol de búsqueda.
+#### ¿Por qué una tabla hash no es adecuada para consultas por rango? ¿Qué ocurriría con un árbol binario de búsqueda?
+
+Una tabla hash está diseñada para encontrar elementos mediante una clave exacta, pero no conserva el orden de las guías. Por eso, para consultar todas las guías entre X e Y sería necesario revisar los elementos almacenados, lo que resulta poco eficiente.
+
+Un árbol binario de búsqueda sí organiza las claves de manera ordenada. Sin embargo, si se insertan 400.000 guías en orden creciente en un árbol sin balanceo, este puede degenerarse en una estructura similar a una lista enlazada. En ese caso, su altura sería de aproximadamente 399.999 aristas y una búsqueda podría necesitar hasta 400.000 comparaciones.
+
+Si el árbol se mantiene equilibrado, su altura sería aproximadamente log₂(400.000), es decir, unos 19 niveles. Esto permite localizar el inicio del rango eficientemente y recorrer los k resultados, con un costo aproximado de Θ(log n + k).
+
+### 5. Concepto para la jefa de operaciones.
+#### ¿Qué estructura recomendaría para Rutas del Caribe y cuánto tardaría una búsqueda con 5 millones de guías?
+
+Se recomienda utilizar una combinación de estructuras: una tabla hash para las consultas puntuales de guías y un árbol de búsqueda equilibrado para las consultas por rango.
+
+Con base en el experimento A, la lista enlazada presentó un crecimiento cercano al lineal. Una extrapolación lineal de los datos medidos permite estimar que, con 5 millones de guías, una búsqueda infructuosa podría tardar alrededor de medio segundo. Esta es una aproximación y no una medición real.
+
+Para la tabla hash, si se mantiene un factor de carga cercano a 2 y una distribución uniforme de las claves, se espera que el tiempo promedio de búsqueda continúe siendo prácticamente constante, incluso al aumentar la cantidad de guías. No obstante, el rendimiento real dependerá de la memoria disponible, las colisiones y la implementación.
+
+Por lo tanto, la tabla hash es la alternativa más conveniente para las consultas puntuales, mientras que un árbol equilibrado permite atender eficientemente las consultas por rango.
